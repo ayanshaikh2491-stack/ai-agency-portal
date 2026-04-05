@@ -70,109 +70,47 @@ export default function Home() {
     }
   };
 
-  // CEO Chat - creates structured tasks & projects
+  // CEO Task Submission - sends to engine for real execution
   const sendCeo = async () => {
     if (!ceoInput.trim() || ceoBusy) return;
     const msg = ceoInput;
     setCeoInput('');
     setCeoBusy(true);
 
-    const userMsg = { role: 'user', content: msg, sender: 'You' };
-    setCeoHistory(prev => [...prev, userMsg]);
+    setCeoHistory(prev => [...prev, { role: 'user', content: msg, sender: 'You' }]);
 
     try {
-      const hist = ceoHistory.slice(-8).map(m => ({ role: m.sender === 'You' ? 'user' : 'assistant', content: m.content }));
-
-      // Step 1: Get CEO analysis of the request
-      const analysisRes = await fetch(API + '/api/chat/ceo', {
+      // Send task to engine for real execution
+      const res = await fetch(API + '/api/engine/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `Analyze this request and tell me what needs to be done, which departments to assign, and what the project should include: ${msg}`, history: hist })
+        body: JSON.stringify({ message: msg })
       });
 
-      if (!analysisRes.ok) throw new Error('Failed to connect');
+      if (!res.ok) throw new Error('Failed to connect');
 
-      const analysisData = await analysisRes.json();
-      const aiResponse = analysisData.response;
+      const result = await res.json();
 
-      // Step 2: Create a project from the request
-      const projectName = msg.slice(0, 50) + (msg.length > 50 ? '...' : '');
-      const projectRes = await fetch(API + '/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: projectName, members: ['User'], description: msg })
-      });
-
-      let project = null;
-      if (projectRes.ok) {
-        project = await projectRes.json();
-        setCurrentProject(project);
-      }
-
-      // Step 3: Create tasks for relevant departments
-      const deptMapping = {
-        'website': 'web', 'web': 'web', 'site': 'web', 'landing': 'web',
-        'seo': 'seo', 'ranking': 'seo', 'google': 'seo',
-        'marketing': 'marketing', 'ads': 'marketing', 'campaign': 'marketing',
-        'social': 'social_media', 'content': 'social_media', 'reels': 'social_media'
-      };
-
-      const lowerMsg = msg.toLowerCase();
-      const detectedDepts = Object.entries(deptMapping)
-        .filter(([key]) => lowerMsg.includes(key))
-        .map(([, value]) => value);
-
-      if (detectedDepts.length > 0) {
-        for (const dept of detectedDepts) {
-          const taskTitle = `${msg.slice(0, 40)} [${dept}]`;
-
-          // Create task
-          await fetch(API + '/api/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: taskTitle,
-              description: msg,
-              department: dept,
-              project_id: project?.id
-            })
-          });
-
-          // Assign to department via flow
-          await fetch(API + `/api/flow/ceo-to-dept/${dept}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: taskTitle,
-              description: msg,
-              department: dept,
-              project_id: project?.id
-            })
-          });
-        }
-
-        // Add system message about task creation
-        const sysMsg = {
+      // Add execution result to history
+      setCeoHistory(prev => [...prev,
+        { role: 'assistant', content: `✅ Task created. Execution started.\n\n${result.summary || 'Processing...'}`, sender: 'System' },
+        ...(result.results ? Object.entries(result.results).map(([key, val]) => ({
           role: 'assistant',
-          content: `✅ Request understood. Created project "${projectName}" and assigned tasks to: ${detectedDepts.join(', ')}. Track progress in the Tasks or Dashboard tab.`,
-          sender: 'System'
-        };
-        setCeoHistory(prev => [...prev, { ...analysisData }, sysMsg]);
-      } else {
-        setCeoHistory(prev => [...prev, analysisData]);
-      }
+          content: `**${key}**: ${val.status === 'completed' ? '✅ Completed' : '❌ Failed'}\n${(val.output || '').slice(0, 500)}`,
+          sender: 'Agent'
+        })) : [])
+      ]);
 
-      // Reload data
+      // Reload data to show new tasks
       loadData();
     } catch (e) {
-      console.error('CEO Error:', e);
+      console.error('Engine Error:', e);
       setCeoHistory(prev => [...prev, {
         role: 'assistant',
-        content: `Error: Could not connect. Make sure backend is running and GROQ_API_KEY is set.`,
+        content: `❌ Error: Could not execute task. Make sure backend is running and GROQ_API_KEY is set.`,
         sender: 'System'
       }]);
     }
-
     setCeoBusy(false);
   };
 
