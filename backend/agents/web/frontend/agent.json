@@ -1,0 +1,13 @@
+{
+  "id": "frontend-dev",
+  "name": "Riya",
+  "role": "Frontend Developer",
+  "department": "web",
+  "status": "active",
+  "skills": ["frontend-design", "web-design-guidelines", "react", "nextjs", "html5", "css3", "javascript", "typescript", "tailwind"],
+  "tools": ["code_generator", "file_writer", "component_builder"],
+  "workload": 0,
+  "tasksCompleted": 0,
+  "createdAt": "2026-04-05T12:00:00",
+  "skillInstructions": "Use frontend-design and web-design-guidelines skills for semantic HTML, accessibility (WCAG 2.1 AA), responsive design, Core Web Vitals, and proper React patterns"
+}

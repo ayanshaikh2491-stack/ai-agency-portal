@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Memory (runtime data)
+**/memory/*.json
+
+# Vercel
+**/.vercel/
+
+# Build
+.next/
+out/
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+nul
+ai-ag
+test.py
+skills-lock.json
+test_data/
+data/
+
+.vercel

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ai-agency-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_MODEL
+        value: google/gemma-3-4b-it:free
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: QWEN_MODEL
+        value: qwen/qwen3-32b:free

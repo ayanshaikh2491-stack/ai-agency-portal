@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ],
+  "env": {
+    "OPENROUTER_MODEL": "google/gemma-3-4b-it:free"
+  },
+  "build": {
+    "env": {
+      "PIP_NO_CACHE_DIR": "1"
+    }
+  }
+}

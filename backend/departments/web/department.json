@@ -1,0 +1,17 @@
+{
+  "name": "web",
+  "displayName": "Web Department",
+  "description": "Website development, frontend, backend, SEO, performance, and QA",
+  "lead": "Sara",
+  "agentCount": 8,
+  "agents": [
+    "frontend",
+    "backend",
+    "ui",
+    "api",
+    "seo-helper",
+    "performance",
+    "qa",
+    "coordinator"
+  ]
+}

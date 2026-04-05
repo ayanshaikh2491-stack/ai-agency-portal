@@ -1,0 +1,130 @@
+{
+  "skills": [
+    {
+      "name": "web_development",
+      "description": "Build websites with React, Next.js, HTML/CSS",
+      "category": "development",
+      "tools": [
+        "code_generator",
+        "file_writer"
+      ]
+    },
+    {
+      "name": "api_design",
+      "description": "Design REST APIs, GraphQL schemas",
+      "category": "development",
+      "tools": [
+        "code_generator",
+        "api_tester"
+      ]
+    },
+    {
+      "name": "ui_design",
+      "description": "Create beautiful UI components, design systems",
+      "category": "design",
+      "tools": [
+        "image_generator",
+        "color_picker"
+      ]
+    },
+    {
+      "name": "testing",
+      "description": "Write tests, debug code, QA",
+      "category": "qa",
+      "tools": [
+        "test_runner",
+        "debugger"
+      ]
+    },
+    {
+      "name": "content_writing",
+      "description": "Write marketing copy, blog posts, social media content",
+      "category": "marketing",
+      "tools": [
+        "text_generator",
+        "seo_analyzer"
+      ]
+    },
+    {
+      "name": "data_analysis",
+      "description": "Analyze data, create charts, ML models",
+      "category": "data",
+      "tools": [
+        "data_processor",
+        "chart_generator"
+      ]
+    },
+    {
+      "name": "devops",
+      "description": "Deploy apps, manage infrastructure, CI/CD",
+      "category": "infrastructure",
+      "tools": [
+        "deployer",
+        "monitor"
+      ]
+    },
+    {
+      "name": "security_audit",
+      "description": "Scan for vulnerabilities, fix security issues",
+      "category": "security",
+      "tools": [
+        "scanner",
+        "fixer"
+      ]
+    }
+  ],
+  "agent_skills": {
+    "Atlas": [
+      "web_development",
+      "api_design",
+      "data_analysis"
+    ],
+    "Amit": [
+      "web_development",
+      "api_design",
+      "ui_design"
+    ],
+    "Ravi": [
+      "web_development",
+      "api_design",
+      "testing"
+    ],
+    "Priya": [
+      "web_development",
+      "ui_design",
+      "testing"
+    ],
+    "Rohan": [
+      "ui_design",
+      "content_writing"
+    ],
+    "Sneha": [
+      "testing",
+      "security_audit"
+    ],
+    "Kavita": [
+      "content_writing",
+      "data_analysis"
+    ],
+    "Vikram": [
+      "devops",
+      "security_audit"
+    ],
+    "Neha": [
+      "data_analysis",
+      "web_development"
+    ],
+    "Arjun": [
+      "data_analysis",
+      "api_design"
+    ],
+    "Deepak": [
+      "security_audit",
+      "devops"
+    ],
+    "Pooja": [
+      "content_writing",
+      "data_analysis"
+    ]
+  }
+}

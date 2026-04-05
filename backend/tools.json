@@ -1,0 +1,67 @@
+{
+  "tools": [
+    {
+      "id": "code_generator",
+      "name": "Code Generator",
+      "description": "Generate code for specific frameworks (React, FastAPI, Node.js)",
+      "category": "development",
+      "supported_frameworks": ["react", "nextjs", "fastapi", "nodejs", "tailwind"]
+    },
+    {
+      "id": "file_writer",
+      "name": "File Writer",
+      "description": "Create/update files with content",
+      "category": "development",
+      "supports": ["create", "update", "delete"]
+    },
+    {
+      "id": "code_review",
+      "name": "Code Review",
+      "description": "Review code for quality, security, and best practices",
+      "category": "quality",
+      "checks": ["security", "performance", "readability", "best_practices"]
+    },
+    {
+      "id": "design_system",
+      "name": "Design System",
+      "description": "Generate design tokens and components",
+      "category": "design",
+      "outputs": ["colors", "typography", "spacing", "components"]
+    },
+    {
+      "id": "api_tester",
+      "name": "API Tester",
+      "description": "Test API endpoints for correctness and performance",
+      "category": "testing",
+      "tests": ["response_time", "status_codes", "data_validation", "auth"]
+    },
+    {
+      "id": "animation_builder",
+      "name": "Animation Builder",
+      "description": "Create CSS/JS animations and transitions",
+      "category": "effects",
+      "supports": ["css", "gsap", "threejs", "scroll_trigger"]
+    },
+    {
+      "id": "performance_analyzer",
+      "name": "Performance Analyzer",
+      "description": "Analyze page performance and suggest optimizations",
+      "category": "testing",
+      "metrics": ["lcp", "fid", "cls", "bundle_size", "fps"]
+    },
+    {
+      "id": "bug_tracker",
+      "name": "Bug Tracker",
+      "description": "Track and report bugs with severity levels",
+      "category": "testing",
+      "severities": ["critical", "high", "medium", "low"]
+    },
+    {
+      "id": "task_manager",
+      "name": "Task Manager",
+      "description": "Assign and track tasks between agents",
+      "category": "coordination",
+      "features": ["assign", "track", "prioritize", "combine_outputs"]
+    }
+  ]
+}

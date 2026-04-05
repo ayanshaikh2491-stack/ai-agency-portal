@@ -1,0 +1,16 @@
+{
+  "ceo": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "web": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "website": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "seo": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "marketing": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "social_media": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "qa": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "devops": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "product": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "data": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "security": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "hr": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "creative": {"api_key": "", "model": "llama-3.1-8b-instant"},
+  "development": {"api_key": "", "model": "llama-3.1-8b-instant"}
+}

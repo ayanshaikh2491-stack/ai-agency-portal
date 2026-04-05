@@ -1,0 +1,8 @@
+{
+  "name": "seo",
+  "displayName": "SEO Department",
+  "description": "Search Engine Optimization, ranking tracking, traffic analysis, and growth",
+  "lead": "Kavita",
+  "agentCount": 2,
+  "agents": ["seo-agent", "analytics-agent"]
+}
