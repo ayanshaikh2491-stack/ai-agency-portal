@@ -54,60 +54,89 @@ class DataStore:
 # SKILL SYSTEM
 # ============================================================
 class SkillManager:
-    """Load and manage skills dynamically"""
+    """Load and manage skills dynamically from markdown files"""
 
     def __init__(self, skills_dir: str = None):
         self.skills_dir = skills_dir or os.path.join(BACKEND_DIR, "skills")
         self.skills = {}
+        self.skill_markdown = {}  # Raw markdown content
         self._load_skills()
 
     def _load_skills(self):
         os.makedirs(self.skills_dir, exist_ok=True)
+        # Default skills (JSON fallback)
         default_skills = {
-            "frontend_design": {
-                "id": "frontend_design",
-                "name": "Frontend Design Skill",
-                "description": "Generate HTML/CSS/JS for web pages using Tailwind CSS",
-                "type": "frontend",
-                "prompt": "Generate complete HTML structure with Tailwind CSS classes. Make it responsive, modern, and clean."
-            },
-            "backend_logic": {
-                "id": "backend_logic",
-                "name": "Backend Logic Skill",
-                "description": "Design API endpoints, database models, and business logic",
-                "type": "backend",
-                "prompt": "Design the backend API routes, database models, and business logic for this feature."
-            },
-            "debug_analyzer": {
-                "id": "debug_analyzer",
-                "name": "Debug Analyzer Skill",
-                "description": "Analyze code, find bugs, suggest fixes",
-                "type": "debug",
-                "prompt": "Analyze the provided code. Find bugs, security issues, performance problems. Suggest exact fixes."
-            },
-            "seo_optimization": {
-                "id": "seo_optimization",
-                "name": "SEO Optimization Skill",
-                "description": "Analyze and optimize for search engines",
-                "type": "seo",
-                "prompt": "Analyze the page content and suggest specific SEO improvements: meta tags, keywords, structure, schema."
-            },
-            "marketing_copy": {
-                "id": "marketing_copy",
-                "name": "Marketing Copy Skill",
-                "description": "Write compelling marketing copy and CTAs",
-                "type": "marketing",
-                "prompt": "Write persuasive marketing copy with clear CTAs. Focus on benefits, not features."
-            }
+            "frontend_design": {"id": "frontend_design", "name": "Frontend Design Skill", "description": "Generate HTML/CSS/JS for web pages using Tailwind CSS", "type": "frontend", "trigger_keywords": ["ui", "frontend", "html", "css", "design", "website", "landing page"]},
+            "backend_logic": {"id": "backend_logic", "name": "Backend Logic Skill", "description": "Design API endpoints, database models, and business logic", "type": "backend", "trigger_keywords": ["api", "backend", "database", "server", "auth", "endpoint"]},
+            "debug_analyzer": {"id": "debug_analyzer", "name": "Debug Analyzer Skill", "description": "Analyze code, find bugs, suggest fixes", "type": "debug", "trigger_keywords": ["bug", "error", "fix", "debug", "broken", "not working"]},
+            "seo_optimization": {"id": "seo_optimization", "name": "SEO Optimization Skill", "description": "Analyze and optimize for search engines", "type": "seo", "trigger_keywords": ["seo", "ranking", "google", "keyword", "optimize"]},
+            "marketing_copy": {"id": "marketing_copy", "name": "Marketing Copy Skill", "description": "Write compelling marketing copy and CTAs", "type": "marketing", "trigger_keywords": ["marketing", "ad", "campaign", "copy", "social"]}
         }
+        # Load markdown skills from skills/default/
+        default_md_dir = os.path.join(self.skills_dir, "default")
+        if os.path.exists(default_md_dir):
+            for filename in os.listdir(default_md_dir):
+                if filename.endswith(".md"):
+                    filepath = os.path.join(default_md_dir, filename)
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    parsed = self._parse_skill_md(content)
+                    if parsed:
+                        skill_id = parsed.get("name", filename.replace(".md", ""))
+                        self.skills[skill_id] = parsed
+                        self.skill_markdown[skill_id] = content
+        # Load custom JSON skills
         skills_file = os.path.join(self.skills_dir, "custom_skills.json")
         if os.path.exists(skills_file):
             with open(skills_file, "r") as f:
                 custom_skills = json.load(f)
                 self.skills.update(custom_skills)
+        # Add defaults for missing skills
         for skill_id, skill_data in default_skills.items():
             if skill_id not in self.skills:
                 self.skills[skill_id] = skill_data
+
+    def _parse_skill_md(self, content: str) -> Dict:
+        """Parse a skill markdown file into a dictionary"""
+        result = {}
+        current_key = None
+        current_value = []
+        for line in content.split("\n"):
+            if line.startswith("## "):
+                if current_key and current_value:
+                    val = "\n".join(current_value).strip()
+                    # Try to parse JSON blocks
+                    if val.startswith("{") and val.endswith("}"):
+                        try: result[current_key] = json.loads(val)
+                        except: result[current_key] = val
+                    elif "\n- " in val or val.startswith("- "):
+                        result[current_key] = [l.strip().lstrip("- ") for l in val.split("\n") if l.strip().startswith("- ")]
+                    elif "\n" in val and current_key in ["steps"]:
+                        result[current_key] = [l.strip().lstrip("0123456789. ") for l in val.split("\n") if l.strip()]
+                    else:
+                        result[current_key] = val
+                current_key = line[3:].strip()
+                current_value = []
+            elif current_key:
+                current_value.append(line)
+        if current_key and current_value:
+            val = "\n".join(current_value).strip()
+            if val.startswith("{") and val.endswith("}"):
+                try: result[current_key] = json.loads(val)
+                except: result[current_key] = val
+            else:
+                result[current_key] = val
+        return result if result else None
+
+    def detect_skill(self, task_description: str) -> List[Dict]:
+        """Detect which skills match a task description based on trigger keywords"""
+        matched = []
+        desc = task_description.lower()
+        for skill_id, skill in self.skills.items():
+            triggers = skill.get("trigger_keywords", [])
+            if any(kw.lower() in desc for kw in triggers):
+                matched.append({"id": skill_id, **skill})
+        return matched
 
     def get_skill(self, skill_id: str) -> Optional[Dict]:
         return self.skills.get(skill_id)
