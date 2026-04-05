@@ -3,9 +3,15 @@ import sys
 import os
 
 # Add parent directory to path so we can import main
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, backend_dir)
+
+# Ensure required directories exist for Vercel serverless
+os.makedirs(os.path.join(backend_dir, "data"), exist_ok=True)
+os.makedirs(os.path.join(backend_dir, "skills", "default"), exist_ok=True)
+os.makedirs(os.path.join(backend_dir, "output"), exist_ok=True)
 
 from main import app
 from mangum import Mangum
 
-handler = Mangum(app)
+handler = Mangum(app, debug=True)
