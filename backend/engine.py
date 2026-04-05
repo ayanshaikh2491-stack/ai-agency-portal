@@ -388,8 +388,14 @@ class DepartmentExecutor:
             self.log_system.log("agent_error", {"task_id": task_id, "agent": agent_key, "error": result[:200]}, "error")
             self.task_system.record_error(task_id, agent_key, result)
             return result
+        # Save agent output as file for actual website/app building
+        output_dir = os.path.join(BACKEND_DIR, "output")
+        os.makedirs(output_dir, exist_ok=True)
+        output_file = os.path.join(output_dir, f"{task_id}_{agent_key}.json")
+        with open(output_file, "w") as f:
+            json.dump({"task_id": task_id, "agent": agent_key, "output": result, "timestamp": datetime.now().isoformat()}, f, indent=2)
         self.task_system.record_output(task_id, agent_key, result)
-        self.log_system.log("agent_completed", {"task_id": task_id, "agent": agent_key, "output_length": len(result)})
+        self.log_system.log("agent_completed", {"task_id": task_id, "agent": agent_key, "output_length": len(result), "file": output_file})
         return result
 
 
